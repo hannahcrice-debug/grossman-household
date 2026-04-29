@@ -889,8 +889,8 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     <button class="tab" onclick="budgetTab('history',this)" style="white-space:nowrap">📈 Trends</button>
     <button class="tab" onclick="budgetTab('goals',this)" style="white-space:nowrap">🎯 Goals</button>
     <button class="tab" onclick="budgetTab('bills',this)" style="white-space:nowrap">🧾 Bills</button>
-    <button class="tab" onclick="budgetTab('utilities',this)" style="white-space:nowrap">💡 Utilities</button>
     <button class="tab" onclick="budgetTab('subs',this)" style="white-space:nowrap">🔄 Subscriptions</button>
+    <button class="tab" onclick="budgetTab('utilities',this)" style="white-space:nowrap">💡 Utilities</button>
   </div>
   <!-- FINANCIAL DASHBOARD -->
   <div id="bt-dash">
@@ -926,19 +926,19 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     <div id="bills-list"></div>
     <button class="btn btn-g" onclick="openBillModal()" style="width:100%;justify-content:center;margin-top:6px">+ Add bill</button>
   </div>
-  <!-- UTILITIES -->
-  <div id="bt-utilities" style="display:none">
-    <div class="sl">Utility readings &amp; bills</div>
-    <div class="card"><div class="ch"><div class="ct">⚡ Electric (SMUD)</div><button class="btn btn-g" onclick="openMo('mo-util');document.getElementById('util-type').value='electric'">+ Log</button></div><div class="cb" id="util-electric-list"></div></div>
-    <div class="card"><div class="ch"><div class="ct">🔥 Gas (PG&amp;E)</div><button class="btn btn-g" onclick="openMo('mo-util');document.getElementById('util-type').value='gas'">+ Log</button></div><div class="cb" id="util-gas-list"></div></div>
-    <div class="card"><div class="ch"><div class="ct">💧 Water (Sacramento County)</div><button class="btn btn-g" onclick="openMo('mo-util');document.getElementById('util-type').value='water'">+ Log</button></div><div class="cb" id="util-water-list"></div></div>
-  </div>
   <!-- SUBSCRIPTIONS -->
   <div id="bt-subs" style="display:none">
     <div class="sl">Active subscriptions</div>
     <div id="subs-summary" style="margin-bottom:8px"></div>
     <div class="card"><div class="cb" id="subs-list"></div></div>
     <button class="btn btn-g" onclick="closeSubModal();openMo('mo-sub')" style="width:100%;justify-content:center;margin-top:6px">+ Add subscription</button>
+  </div>
+  <!-- UTILITIES -->
+  <div id="bt-utilities" style="display:none">
+    <div class="sl">Utility readings &amp; bills</div>
+    <div class="card"><div class="ch"><div class="ct">⚡ Electric (SMUD)</div><button class="btn btn-g" onclick="openMo('mo-util');document.getElementById('util-type').value='electric'">+ Log</button></div><div class="cb" id="util-electric-list"></div></div>
+    <div class="card"><div class="ch"><div class="ct">🔥 Gas (PG&amp;E)</div><button class="btn btn-g" onclick="openMo('mo-util');document.getElementById('util-type').value='gas'">+ Log</button></div><div class="cb" id="util-gas-list"></div></div>
+    <div class="card"><div class="ch"><div class="ct">💧 Water (Sacramento County)</div><button class="btn btn-g" onclick="openMo('mo-util');document.getElementById('util-type').value='water'">+ Log</button></div><div class="cb" id="util-water-list"></div></div>
   </div>
 </div>
 
@@ -2053,10 +2053,20 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     <option>Utilities</option><option>Childcare</option><option>Loans / Debt</option>
     <option>Phone</option><option>Other</option>
   </select></div>
-  <div class="fr"><div class="fl">Monthly amount ($)</div><input type="number" id="bill-amount" step="0.01" placeholder="0.00"></div>
-  <div class="fr"><div class="fl">Due day of month</div><select id="bill-due">
-    <option value="">— Optional —</option>
+  <div class="fr"><div class="fl">Frequency</div><select id="bill-freq" onchange="updateBillAmountLabel()">
+    <option value="weekly">Weekly</option><option value="biweekly">Every other week</option>
+    <option value="twicemonth">Twice a month</option><option value="monthly" selected>Monthly</option>
+    <option value="bimonthly">Every other month</option><option value="quarterly">Quarterly</option>
+    <option value="semiannual">Semi-annually</option><option value="annual">Annually</option>
+  </select></div>
+  <div class="fr"><div class="fl" id="bill-amount-label">Amount per month ($)</div><input type="number" id="bill-amount" step="0.01" placeholder="0.00"></div>
+  <div class="fr" id="bill-due-wrap"><div class="fl" id="bill-due-label">Due day of month</div><select id="bill-due">
+    <option value="">-- Optional --</option>
     <option value="1">1st</option><option value="2">2nd</option><option value="3">3rd</option><option value="4">4th</option><option value="5">5th</option><option value="6">6th</option><option value="7">7th</option><option value="8">8th</option><option value="9">9th</option><option value="10">10th</option><option value="11">11th</option><option value="12">12th</option><option value="13">13th</option><option value="14">14th</option><option value="15">15th</option><option value="16">16th</option><option value="17">17th</option><option value="18">18th</option><option value="19">19th</option><option value="20">20th</option><option value="21">21st</option><option value="22">22nd</option><option value="23">23rd</option><option value="24">24th</option><option value="25">25th</option><option value="26">26th</option><option value="27">27th</option><option value="28">28th</option><option value="29">29th</option><option value="30">30th</option><option value="31">31st</option>
+  </select>
+  <select id="bill-due-dow" style="display:none">
+    <option value="">-- Optional --</option>
+    <option value="mon">Monday</option><option value="tue">Tuesday</option><option value="wed">Wednesday</option><option value="thu">Thursday</option><option value="fri">Friday</option><option value="sat">Saturday</option><option value="sun">Sunday</option>
   </select></div>
   <div class="fr"><div class="fl">Auto-pay?</div><select id="bill-autopay"><option value="yes">Yes — auto-pay on</option><option value="no">No — manual payment</option></select></div>
   <div class="fr"><div class="fl">Notes</div><input type="text" id="bill-notes" placeholder="Account #, lender, notes…"></div>
@@ -3068,6 +3078,24 @@ function migrateData(){
   if(!S.finances.snapshots)S.finances.snapshots=[];
   if(!S.finances.goals)S.finances.goals=[];
   if(!S.finances.bills)S.finances.bills=[];
+  // Seed recurring bills if none exist
+  if(S.finances.bills.length===0){
+    S.finances.bills=[
+      {id:'bl-rent',name:'Rent (Bilt card)',cat:'Housing',freq:'monthly',amount:'3700',due:'1',dueDow:'',autopay:'yes',notes:'Paid via Bilt Palladium card'},
+      {id:'bl-pge',name:'PG&E',cat:'Utilities',freq:'monthly',amount:'297',due:'5',dueDow:'',autopay:'yes',notes:'Ranges $173-$421 seasonally'},
+      {id:'bl-smud',name:'SMUD',cat:'Utilities',freq:'monthly',amount:'200',due:'5',dueDow:'',autopay:'yes',notes:'Ranges $169-$230'},
+      {id:'bl-comcast',name:'Comcast/Xfinity Internet',cat:'Utilities',freq:'monthly',amount:'125',due:'20',dueDow:'',autopay:'yes',notes:''},
+      {id:'bl-xfmob',name:'Xfinity Mobile',cat:'Phone',freq:'monthly',amount:'42',due:'17',dueDow:'',autopay:'yes',notes:''},
+      {id:'bl-water',name:'Water',cat:'Utilities',freq:'monthly',amount:'200',due:'',dueDow:'',autopay:'no',notes:'Budgeted estimate'},
+      {id:'bl-mbenz',name:'Mercedes-Benz Financial Services',cat:'Car / Transport',freq:'monthly',amount:'848.73',due:'12',dueDow:'',autopay:'yes',notes:'Car payment'},
+      {id:'bl-geico',name:'GEICO',cat:'Insurance',freq:'monthly',amount:'212.71',due:'28',dueDow:'',autopay:'yes',notes:'Auto insurance'},
+      {id:'bl-fastrak',name:'FasTrak',cat:'Car / Transport',freq:'monthly',amount:'25',due:'',dueDow:'',autopay:'yes',notes:'Bridge tolls, as needed'},
+      {id:'bl-doodoo',name:'Doo Doo Squad',cat:'Other',freq:'monthly',amount:'92',due:'12',dueDow:'',autopay:'yes',notes:'Pet waste removal'},
+      {id:'bl-pest',name:'Structured Pest Control',cat:'Other',freq:'bimonthly',amount:'79',due:'13',dueDow:'',autopay:'yes',notes:'Every other month'},
+      {id:'bl-swim',name:'SafeSplash Swim School',cat:'Childcare',freq:'monthly',amount:'125',due:'25',dueDow:'',autopay:'yes',notes:'Sterling swim lessons'},
+      {id:'bl-childcare',name:'Childcare',cat:'Childcare',freq:'weekly',amount:'415',due:'',dueDow:'tue',autopay:'no',notes:'Tuesdays'},
+    ];
+  }
   // Goal event-planning fields — ensure all existing goals have the new shape
   S.finances.goals.forEach(g=>{
     if(g.eventType==null)g.eventType='';
@@ -7608,10 +7636,41 @@ function removeSub(i){S.subscriptions.splice(i,1);renderSubs();save();}
 // ══ BILLS ═══════════════════════════════════════════════
 const BILL_CAT_ICONS={'Housing':'🏠','Insurance':'🛡️','Car / Transport':'🚗','Utilities':'💡','Childcare':'⭐','Loans / Debt':'💳','Phone':'📱','Other':'📋'};
 
+const BILL_FREQ_LABELS={weekly:'Weekly',biweekly:'Every 2 weeks',twicemonth:'Twice/month',monthly:'Monthly',bimonthly:'Every 2 months',quarterly:'Quarterly',semiannual:'Semi-annually',annual:'Annually'};
+const BILL_FREQ_SHORT={weekly:'/wk',biweekly:'/2wk',twicemonth:'x2/mo',monthly:'/mo',bimonthly:'/2mo',quarterly:'/qtr',semiannual:'/6mo',annual:'/yr'};
+// Convert any bill amount to its monthly equivalent
+function billToMonthly(b){
+  var amt=parseFloat(b.amount)||0;
+  switch(b.freq||'monthly'){
+    case 'weekly':return amt*52/12;
+    case 'biweekly':return amt*26/12;
+    case 'twicemonth':return amt*2;
+    case 'monthly':return amt;
+    case 'bimonthly':return amt/2;
+    case 'quarterly':return amt/3;
+    case 'semiannual':return amt/6;
+    case 'annual':return amt/12;
+    default:return amt;
+  }
+}
+function updateBillAmountLabel(){
+  var f=document.getElementById('bill-freq').value;
+  var labels={weekly:'Amount per week ($)',biweekly:'Amount per pay period ($)',twicemonth:'Amount per payment ($)',monthly:'Amount per month ($)',bimonthly:'Amount per 2 months ($)',quarterly:'Amount per quarter ($)',semiannual:'Amount per 6 months ($)',annual:'Annual amount ($)'};
+  var el=document.getElementById('bill-amount-label');if(el)el.textContent=labels[f]||'Amount ($)';
+  // Toggle due field between day-of-week and day-of-month
+  var isWeekBased=(f==='weekly'||f==='biweekly');
+  var domSel=document.getElementById('bill-due');
+  var dowSel=document.getElementById('bill-due-dow');
+  var lbl=document.getElementById('bill-due-label');
+  if(domSel)domSel.style.display=isWeekBased?'none':'';
+  if(dowSel)dowSel.style.display=isWeekBased?'':'none';
+  if(lbl)lbl.textContent=isWeekBased?'Due day of week':'Due day of month';
+}
+
 function getBills(){return S.finances&&S.finances.bills?S.finances.bills:[];}
 
 function billsMonthlyTotal(){
-  return getBills().reduce(function(a,b){return a+(parseFloat(b.amount)||0);},0);
+  return getBills().reduce(function(a,b){return a+billToMonthly(b);},0);
 }
 function subsMonthlyTotal(){
   return (S.subscriptions||[]).reduce(function(a,s){return a+subMonthly(s);},0);
@@ -7651,7 +7710,7 @@ function renderBills(){
   var cats=[...new Set(bills.map(function(b){return b.cat;}))];
   el.innerHTML=cats.map(function(cat){
     var catBills=bills.filter(function(b){return b.cat===cat;});
-    var catTotal=catBills.reduce(function(a,b){return a+(parseFloat(b.amount)||0);},0);
+    var catTotal=catBills.reduce(function(a,b){return a+billToMonthly(b);},0);
     return'<div style="margin-bottom:4px">'
       +'<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 2px 4px;margin-bottom:2px">'
         +'<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--hint)">'+(BILL_CAT_ICONS[cat]||'📋')+' '+cat+'</div>'
@@ -7659,17 +7718,28 @@ function renderBills(){
       +'</div>'
       +catBills.map(function(b){
         var realIdx=bills.indexOf(b);
-        var dueStr=b.due?'Due '+b.due+(b.due==='1'?'st':b.due==='2'?'nd':b.due==='3'?'rd':'th'):'';
+        var freq=b.freq||'monthly';
+        var isWeekBased=(freq==='weekly'||freq==='biweekly');
+        var dueStr='';
+        if(isWeekBased&&b.dueDow){dueStr='Due '+b.dueDow.charAt(0).toUpperCase()+b.dueDow.slice(1)+'s';}
+        else if(!isWeekBased&&b.due){dueStr='Due '+b.due+(b.due==='1'?'st':b.due==='2'?'nd':b.due==='3'?'rd':'th');}
+        var freqBadge=freq!=='monthly'?'<span style="font-size:9px;font-weight:700;color:var(--blue);background:var(--blue-bg,rgba(59,130,246,.1));border-radius:20px;padding:2px 7px;margin-left:5px">'+(BILL_FREQ_LABELS[freq]||freq)+'</span>':'';
         var autopayBadge=b.autopay==='yes'?'<span style="font-size:9px;font-weight:700;color:var(--green);background:var(--green-bg);border-radius:20px;padding:2px 7px;margin-left:5px">Auto-pay</span>':'';
+        var amt=parseFloat(b.amount)||0;
+        var moEquiv=billToMonthly(b);
+        var amtLine='<div style="font-size:14px;font-weight:700;color:var(--text)">$'+amt.toFixed(0)+'</div>'
+          +'<div style="font-size:9px;color:var(--hint)">'+(BILL_FREQ_SHORT[freq]||'/mo')+'</div>';
+        if(freq!=='monthly'){
+          amtLine+='<div style="font-size:9px;color:var(--hint);margin-top:1px">($'+moEquiv.toFixed(0)+'/mo)</div>';
+        }
         return'<div class="card" style="margin-bottom:6px"><div class="cb" style="padding:10px 14px;display:flex;align-items:center;gap:10px">'
           +'<div style="font-size:18px;flex-shrink:0">'+(BILL_CAT_ICONS[b.cat]||'📋')+'</div>'
           +'<div style="flex:1;min-width:0">'
-            +'<div style="font-size:13px;font-weight:600">'+escapeHtml(b.name)+autopayBadge+'</div>'
+            +'<div style="font-size:13px;font-weight:600">'+escapeHtml(b.name)+freqBadge+autopayBadge+'</div>'
             +'<div style="font-size:11px;color:var(--muted);margin-top:2px">'+(dueStr||'')+(b.notes?(dueStr?' · ':'')+escapeHtml(b.notes):'')+'</div>'
           +'</div>'
           +'<div style="flex-shrink:0;text-align:right">'
-            +'<div style="font-size:14px;font-weight:700;color:var(--text)">$'+(parseFloat(b.amount)||0).toFixed(0)+'</div>'
-            +'<div style="font-size:9px;color:var(--hint)">/ mo</div>'
+            +amtLine
           +'</div>'
           +'<button onclick="openEditBill('+realIdx+')" style="border:none;background:none;cursor:pointer;color:var(--hint);font-size:15px;flex-shrink:0;padding:4px">✏️</button>'
         +'</div></div>';
@@ -7686,7 +7756,10 @@ function openBillModal(){
   ['bill-name','bill-notes'].forEach(function(id){document.getElementById(id).value='';});
   document.getElementById('bill-amount').value='';
   document.getElementById('bill-due').value='';
+  document.getElementById('bill-due-dow').value='';
+  document.getElementById('bill-freq').value='monthly';
   document.getElementById('bill-autopay').value='yes';
+  updateBillAmountLabel();
   openMo('mo-bill');
 }
 function openEditBill(idx){
@@ -7697,11 +7770,14 @@ function openEditBill(idx){
   document.getElementById('bill-edit-idx').value=idx;
   document.getElementById('bill-name').value=b.name||'';
   document.getElementById('bill-cat').value=b.cat||'Housing';
+  document.getElementById('bill-freq').value=b.freq||'monthly';
   document.getElementById('bill-amount').value=b.amount||'';
   document.getElementById('bill-due').value=b.due||'';
+  document.getElementById('bill-due-dow').value=b.dueDow||'';
   document.getElementById('bill-autopay').value=b.autopay||'yes';
   document.getElementById('bill-notes').value=b.notes||'';
   document.getElementById('bill-delete-wrap').style.display='block';
+  updateBillAmountLabel();
   openMo('mo-bill');
 }
 function closeBillModal(){
@@ -7714,10 +7790,14 @@ function saveBill(){
   if(!S.finances)S.finances={snapshots:[],goals:[],bills:[]};
   if(!S.finances.bills)S.finances.bills=[];
   var idx=document.getElementById('bill-edit-idx').value;
+  var freq=document.getElementById('bill-freq').value||'monthly';
+  var isWeekBased=(freq==='weekly'||freq==='biweekly');
   var entry={id:idx!==''?(S.finances.bills[parseInt(idx)].id||'bl'+Date.now()):'bl'+Date.now(),
     name:name,cat:document.getElementById('bill-cat').value,
+    freq:freq,
     amount:document.getElementById('bill-amount').value,
-    due:document.getElementById('bill-due').value,
+    due:isWeekBased?'':document.getElementById('bill-due').value,
+    dueDow:isWeekBased?document.getElementById('bill-due-dow').value:'',
     autopay:document.getElementById('bill-autopay').value,
     notes:document.getElementById('bill-notes').value.trim()};
   if(idx!==''){S.finances.bills[parseInt(idx)]=entry;}else{S.finances.bills.push(entry);}
